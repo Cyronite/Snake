@@ -13,6 +13,7 @@ let force = "none";
 let appleEaten = false;
 let applepos = [8, 6];
 let eaten = true;
+let score = -1;
 
 function appleGenerator() {
   let possiblePos = [];
@@ -37,14 +38,18 @@ function appleGenerator() {
 const interval = setInterval(function () {
   let gameover = false;
   let eaten = false;
+  let temp = [];
   if (snake[0][1] == applepos[1] && snake[0][0] == applepos[0]) {
     applepos = appleGenerator();
+    score++;
+    console.log(score);
     eaten = true;
   }
 
   if (force != "none") {
     let head = [snake[0][0], snake[0][1]];
     if (eaten == false) {
+      temp = [snake[snake.length-1][0],snake[snake.length-1][1]];
       snake.pop();
     }
 
@@ -66,26 +71,14 @@ const interval = setInterval(function () {
       console.log("hit body");
     }
   }
-  if (0 > snake[0][1] || 11 < snake[0][1]) {
+  if (0 > snake[0][1] || 11 < snake[0][1] || 0 > snake[0][0] || 11 < snake[0][0]) {
+    snake.push(temp);
     clearInterval(interval);
   }
-  if (0 > snake[0][0]) {
-    for(let i = 0; i < snake.length; i++){
-      snake[i][0] = snake[i][0] +1
-    }
-    clearInterval(interval);
-  }
-  if (11 < snake[0][0]) {
-    for(let i = 0; i < snake.length; i++){
-      snake[i][0] = snake[i][0] -1
-    }
-    clearInterval(interval);
-  }
+  
   array = [];
   gathergrid(array, snake, applepos);
   Renderer(array);
-
-  console.log(snake[0][0]);
 }, 100);
 
 document.addEventListener("keydown", function Movement(event) {
